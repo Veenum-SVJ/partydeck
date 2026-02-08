@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PartyDeck - Voting Engine</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00eaff",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#050505", /* Darker black for Cyberpunk feel */
+                        "secondary-neon": "#ff00ff", /* Hot pink accent */
+                        "surface-dark": "#121212",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                    boxShadow: {
+                        'neon': '0 0 5px theme("colors.primary"), 0 0 20px theme("colors.primary")',
+                        'neon-pink': '0 0 5px theme("colors.secondary-neon"), 0 0 20px theme("colors.secondary-neon")',
+                        'card-glow': '0 0 15px rgba(0, 234, 255, 0.15)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Cyberpunk Grid Background Pattern */
+        .cyber-grid {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(0, 234, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 234, 255, 0.05) 1px, transparent 1px);
+            mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+            -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased selection:bg-primary selection:text-black overflow-hidden h-screen flex flex-col relative">
+<!-- Background Layer -->
+<div class="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+<div class="cyber-grid w-full h-full absolute top-0 left-0"></div>
+<!-- Ambient Glows -->
+<div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/10 blur-[100px] rounded-full"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-secondary-neon/10 blur-[100px] rounded-full"></div>
+</div>
+<!-- Main Content Container -->
+<div class="relative z-10 flex flex-col h-full w-full max-w-md mx-auto">
+<!-- Top Bar (HUD) -->
+<header class="flex items-center justify-between p-6 pb-2">
+<div class="flex flex-col">
+<span class="text-xs text-primary font-bold tracking-[0.2em] uppercase drop-shadow-[0_0_5px_rgba(0,234,255,0.8)]">Gameplay</span>
+<h2 class="text-white text-xl font-bold leading-none tracking-tight">ROUND 3/10</h2>
+</div>
+<div class="flex items-center gap-2 bg-surface-dark/80 backdrop-blur-md border border-secondary-neon/30 px-3 py-1.5 rounded-full shadow-[0_0_10px_rgba(255,0,255,0.2)]">
+<span class="material-symbols-outlined text-secondary-neon text-xl animate-pulse">timer</span>
+<p class="text-white text-lg font-bold font-mono tracking-widest tabular-nums">0:15</p>
+</div>
+</header>
+<!-- Question Card Area -->
+<section class="px-6 py-4 shrink-0">
+<div class="relative group w-full bg-surface-dark/60 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-card-glow transition-all duration-500 hover:border-primary/50">
+<!-- Image Background with Gradient Overlay -->
+<div class="absolute inset-0 z-0 bg-cover bg-center opacity-40 mix-blend-overlay group-hover:scale-105 transition-transform duration-700" data-alt="Abstract dark cyberpunk city street with neon lights" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCu2bOsF4-Jy5AKk28gY3wfjeaqpO69-h09LTMdQubhXedIphC_mrhki0_v9LUhRvcr7-P2S2wHFsH0k5CxFWEr2DO5pZOeDJVAqrWdAGAsJ0fObWQRubkyrVaOihcXpUF7_6Dfjdx3b7_5G9bWGxz2jyVv5RkavMg0-e8KLz7zPihiijjBuZ4AV-xMxWphLp8DLyElqrdtmmYE35MMgqZXeKwuqSdRcfN0fmsKC-mIveXYdV5jFZgeH_ov-7JOA8RRQlDe-X2oscOS");'>
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/80 to-transparent z-0"></div>
+<!-- Content -->
+<div class="relative z-10 p-6 flex flex-col gap-3 min-h-[220px] justify-end">
+<div class="inline-flex items-center gap-2 self-start bg-primary/10 border border-primary/20 px-2 py-1 rounded-lg">
+<span class="material-symbols-outlined text-primary text-sm">psychology</span>
+<p class="text-primary text-xs font-bold uppercase tracking-wider">Most Likely To...</p>
+</div>
+<h1 class="text-white text-3xl font-bold leading-tight drop-shadow-md">
+                        Who would die first in a <span class="text-primary underline decoration-2 underline-offset-4 decoration-primary/50">zombie apocalypse</span>?
+                    </h1>
+</div>
+<!-- Decorative corner accents -->
+<div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-primary/20 to-transparent pointer-events-none"></div>
+<div class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-secondary-neon/10 to-transparent pointer-events-none"></div>
+</div>
+</section>
+<!-- Voting Grid Area -->
+<section class="flex-1 overflow-y-auto px-6 py-2 scrollbar-hide">
+<p class="text-white/40 text-sm text-center mb-4 uppercase tracking-widest font-medium">Select a player to vote</p>
+<div class="grid grid-cols-2 gap-4 pb-24">
+<!-- Player 1: Selected State -->
+<button class="group relative flex flex-col items-center gap-3 p-4 rounded-xl bg-surface-dark/40 border-2 border-primary shadow-neon transition-all duration-300 transform scale-[1.02]">
+<div class="absolute top-2 right-2 bg-primary text-black rounded-full w-6 h-6 flex items-center justify-center shadow-[0_0_10px_theme('colors.primary')]">
+<span class="material-symbols-outlined text-sm font-bold">check</span>
+</div>
+<div class="relative w-20 h-20">
+<div class="w-full h-full rounded-full p-[2px] bg-gradient-to-br from-primary via-white to-primary animate-spin-slow">
+<div class="w-full h-full rounded-full overflow-hidden bg-surface-dark border-2 border-black">
+<img alt="Avatar of Mike" class="w-full h-full object-cover" data-alt="Profile picture of a young man smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDDsxQartyS_NdzrgvuC0CIt8qgNGEEDCizaIU8sfJsjB1YsOt21HyiSbVpGbOn4U-JtHO4C-_J5iPd45yakwFPJn3xomUYRXfyD-sE0iEoAv4UTDBghGjNpwISnuvCI1a3xnYISTG9Wr5oHSDzVwXeWxORqQuMUleWMagarkOgTNWSg0_lACDTBW26_Ki78WBLyFa_zVWkUcCcu8ljHe0eE47V0sT_PLI1FqJVFfsNYdTkGMrW3eP5Wqre3UKe9dKpC8lA_vPjtCo"/>
+</div>
+</div>
+</div>
+<div class="text-center">
+<p class="text-white text-lg font-bold leading-none mb-1">Mike</p>
+<p class="text-primary text-xs font-medium uppercase tracking-wider">Vote Cast</p>
+</div>
+</button>
+<!-- Player 2 -->
+<button class="group flex flex-col items-center gap-3 p-4 rounded-xl bg-surface-dark/40 border border-white/5 hover:bg-surface-dark/80 hover:border-white/20 transition-all duration-200">
+<div class="relative w-20 h-20 rounded-full p-[2px] bg-gradient-to-br from-white/10 to-white/5 group-hover:from-secondary-neon/50 group-hover:to-primary/50 transition-colors">
+<div class="w-full h-full rounded-full overflow-hidden bg-surface-dark grayscale group-hover:grayscale-0 transition-all duration-300">
+<img alt="Avatar of Sarah" class="w-full h-full object-cover opacity-70 group-hover:opacity-100" data-alt="Profile picture of a young woman smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSn-unGBqaslzber1mX30Rm5nOPZcHBh3OTLgUsNsCF0585wqaC8GVLdOhr2RNI1Zc72UCmEc3vSBZ0ytVLqrH-RP_3Ampy70J5bS5wcG3_7Lw4ZQhhTc4qcGSfk3Bh8W9s3RxP05Q3jPdE12I3PaO1u2bgnjgzPBShWzo_Bg8loBLW9t0b9TdeQ-bdgV5Fkb_1LEf_6J5OX97eCVcWa0_WXn_G8BT0EMbh69jDeVlmp4EiYO380Gml9w4dv_vw6ChVqKtVCJ8GHUv"/>
+</div>
+</div>
+<div class="text-center">
+<p class="text-white/60 group-hover:text-white text-lg font-bold leading-none mb-1 transition-colors">Sarah</p>
+<p class="text-transparent group-hover:text-white/40 text-xs font-medium uppercase tracking-wider transition-colors">Tap to vote</p>
+</div>
+</button>
+<!-- Player 3 -->
+<button class="group flex flex-col items-center gap-3 p-4 rounded-xl bg-surface-dark/40 border border-white/5 hover:bg-surface-dark/80 hover:border-white/20 transition-all duration-200">
+<div class="relative w-20 h-20 rounded-full p-[2px] bg-gradient-to-br from-white/10 to-white/5 group-hover:from-secondary-neon/50 group-hover:to-primary/50 transition-colors">
+<div class="w-full h-full rounded-full overflow-hidden bg-surface-dark grayscale group-hover:grayscale-0 transition-all duration-300">
+<img alt="Avatar of Jinx" class="w-full h-full object-cover opacity-70 group-hover:opacity-100" data-alt="Profile picture of a person with short hair" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6XBtOlburdBJzoy4TpupSwgSJl6RVPVfAvFaO_DumR4lT8vltRem0BbKnLLUtm-e0x0zssjL69m5OKol1B5WMn9xgMuYCnakpYHhByj-bB1CCCo_tXIuTY2WifSYE4EvM1XAjzfTisFfOG-DPwBLXwnSZawuhJKeysJtvYnckFY9iBC4MSFj6JB8TJwXGNsv4yyJqOuuqyt6H0mMgGlQnTHIbdXNiChIfUvNkjr4WJeDVNarZ93wGhfKf7xXPXXXhUElsypfQr0xJ"/>
+</div>
+</div>
+<div class="text-center">
+<p class="text-white/60 group-hover:text-white text-lg font-bold leading-none mb-1 transition-colors">Jinx</p>
+<p class="text-transparent group-hover:text-white/40 text-xs font-medium uppercase tracking-wider transition-colors">Tap to vote</p>
+</div>
+</button>
+<!-- Player 4 -->
+<button class="group flex flex-col items-center gap-3 p-4 rounded-xl bg-surface-dark/40 border border-white/5 hover:bg-surface-dark/80 hover:border-white/20 transition-all duration-200">
+<div class="relative w-20 h-20 rounded-full p-[2px] bg-gradient-to-br from-white/10 to-white/5 group-hover:from-secondary-neon/50 group-hover:to-primary/50 transition-colors">
+<div class="w-full h-full rounded-full overflow-hidden bg-surface-dark grayscale group-hover:grayscale-0 transition-all duration-300">
+<img alt="Avatar of Sam" class="w-full h-full object-cover opacity-70 group-hover:opacity-100" data-alt="Profile picture of a man with glasses" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBe7NRisKWhsgc2Uj8w2TANB4aRMyj7nE8mey_iYkt3ff5LhERr1yZZ2GBSu-X9skyq2qckgTtfNLK_DHrPVhQNZ9fQXHGzVeTWUDGDZ4a04IxrUpI1OMx-vbAUsZpzLfYgt8xED4op-q3bdgg4O_NMEQKIXurnr81Btw7jee5DNztul64US0L_td-MLkOo2w6Jk-z4dqBH2Zm9ph_7uqGsV5eiB8iwleGTts1ILtz552OL4v6fwcP4kCUw37KGkwFhYCSAUqoyyU6C"/>
+</div>
+</div>
+<div class="text-center">
+<p class="text-white/60 group-hover:text-white text-lg font-bold leading-none mb-1 transition-colors">Sam</p>
+<p class="text-transparent group-hover:text-white/40 text-xs font-medium uppercase tracking-wider transition-colors">Tap to vote</p>
+</div>
+</button>
+</div>
+</section>
+<!-- Bottom Action Area -->
+<div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-background-dark via-background-dark to-transparent z-20">
+<button class="w-full relative group cursor-pointer overflow-hidden rounded-xl bg-primary h-14 flex items-center justify-center shadow-neon hover:shadow-[0_0_30px_theme('colors.primary')] transition-all duration-300 active:scale-[0.98]">
+<!-- Button Scanline Effect -->
+<div class="absolute inset-0 bg-white/20 translate-y-[-100%] group-hover:translate-y-[100%] transition-transform duration-700 ease-in-out"></div>
+<span class="relative z-10 flex items-center gap-2 text-background-dark text-lg font-bold tracking-widest uppercase">
+<span class="material-symbols-outlined font-bold">lock</span>
+                    Lock In Vote
+                </span>
+</button>
+</div>
+</div>
+</body></html>

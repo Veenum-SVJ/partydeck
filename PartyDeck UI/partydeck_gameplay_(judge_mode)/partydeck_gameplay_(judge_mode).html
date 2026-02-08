@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PartyDeck - Judge Mode</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00eaff",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#121212", /* Adjusted to match specific request */
+                        "neon-green": "#CCFF00",
+                        "surface-dark": "#2B2D2F",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+                    boxShadow: {
+                        'neon': '0 0 10px rgba(0, 234, 255, 0.5), 0 0 20px rgba(0, 234, 255, 0.3)',
+                        'neon-strong': '0 0 15px rgba(0, 234, 255, 0.7), 0 0 30px rgba(0, 234, 255, 0.5)',
+                        'neon-green': '0 0 10px rgba(204, 255, 0, 0.3)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hiding for the card hand */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* Subtle geometric background pattern */
+        .bg-pattern {
+            background-image: radial-gradient(circle at 2px 2px, rgba(0, 234, 255, 0.05) 1px, transparent 0);
+            background-size: 40px 40px;
+        }
+
+        /* Neon trail simulation */
+        .trail-effect {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 40px;
+            background: linear-gradient(to top, rgba(0, 234, 255, 0), rgba(0, 234, 255, 0.4));
+            filter: blur(8px);
+            z-index: -1;
+            border-radius: 50%;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#121212] text-white font-display h-screen overflow-hidden selection:bg-primary selection:text-black">
+<!-- Background Elements -->
+<div class="fixed inset-0 pointer-events-none z-0">
+<div class="bg-pattern absolute inset-0"></div>
+<!-- Ambient Glows -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-64 bg-primary/5 blur-[100px] rounded-full"></div>
+<div class="absolute bottom-0 right-0 w-64 h-64 bg-neon-green/5 blur-[80px] rounded-full"></div>
+</div>
+<!-- Main Content Wrapper -->
+<div class="relative z-10 flex flex-col h-full max-w-md mx-auto">
+<!-- Top Bar -->
+<div class="flex items-center justify-between p-4 pt-6">
+<button class="text-white/80 hover:text-primary transition-colors p-2 rounded-full hover:bg-white/5">
+<span class="material-symbols-outlined" style="font-size: 28px;">menu</span>
+</button>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+<span class="text-sm font-bold tracking-widest uppercase text-white/80">Room: <span class="text-primary">Neon</span></span>
+</div>
+<button class="text-white/80 hover:text-primary transition-colors p-2 rounded-full hover:bg-white/5">
+<span class="material-symbols-outlined" style="font-size: 28px;">settings</span>
+</button>
+</div>
+<!-- The Table (Prompt Area) -->
+<div class="flex-1 flex flex-col items-center justify-start px-6 pt-2 pb-6">
+<!-- Prompt Card -->
+<div class="w-full bg-white text-black p-8 rounded-t-2xl shadow-neon relative z-20">
+<h1 class="text-3xl font-bold leading-tight tracking-tight">
+                    Why am I banned from the local TGI Fridays?
+                </h1>
+<!-- Card Watermark/Icon top right -->
+<div class="absolute top-4 right-4 text-black/10">
+<span class="material-symbols-outlined" style="font-size: 32px;">local_fire_department</span>
+</div>
+</div>
+<!-- Sponsor Bar (Attached) -->
+<div class="w-full bg-surface-dark border-x border-b border-primary/30 rounded-b-2xl p-3 flex items-center justify-between shadow-lg relative z-10">
+<div class="flex items-center gap-3">
+<div class="bg-white/10 p-1 rounded-md">
+<span class="material-symbols-outlined text-neon-green" style="font-size: 20px;">local_bar</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] uppercase tracking-wider text-white/50 leading-none mb-1">Sponsored Content</span>
+<span class="text-xs font-medium text-white/90 leading-none">Sponsored by Heineken. Drink Responsibly.</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary/50 text-sm">info</span>
+</div>
+</div>
+<!-- Middle Status Area -->
+<div class="flex flex-col items-center justify-center py-4 gap-3 relative z-10">
+<h2 class="text-primary text-lg font-bold tracking-[0.2em] uppercase animate-pulse text-center">
+                Judge is picking the winner...
+            </h2>
+<!-- Custom Timer -->
+<div class="flex items-center gap-3 w-64">
+<span class="text-xs text-white/60 font-mono">0:12</span>
+<div class="h-1.5 flex-1 bg-white/10 rounded-full overflow-hidden">
+<div class="h-full w-2/3 bg-gradient-to-r from-primary to-neon-green rounded-full shadow-[0_0_10px_rgba(0,234,255,0.8)]"></div>
+</div>
+<span class="material-symbols-outlined text-white/60 text-sm">timer</span>
+</div>
+</div>
+<!-- The Hand (Bottom Area) -->
+<!-- We use a fixed container logic relative to our flex wrapper to ensure it stays at bottom -->
+<div class="relative w-full h-[320px] mt-auto">
+<!-- The Active "Dragged" Card (Simulated Interaction) -->
+<!-- Positioned absolutely to simulate being lifted from the hand -->
+<div class="absolute bottom-[160px] left-1/2 -translate-x-1/2 w-[240px] z-50 transition-all duration-300 transform -rotate-2">
+<div class="trail-effect"></div>
+<div class="bg-white text-black p-6 rounded-xl shadow-neon-strong border-2 border-primary relative overflow-hidden">
+<p class="text-xl font-bold leading-tight">
+                        Three raccoons in a trench coat.
+                    </p>
+<!-- Drag Handle visual cue -->
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-12 h-1 bg-gray-200 rounded-full"></div>
+</div>
+<!-- Finger cursor simulation (optional, adds to the "gameplay" feel of the mockup) -->
+<div class="absolute -bottom-4 right-8 w-12 h-12 bg-primary/30 rounded-full blur-md z-0"></div>
+</div>
+<!-- The Carousel (Other players' cards) -->
+<div class="absolute bottom-0 w-full pb-8 pt-12 overflow-x-auto hide-scrollbar flex items-end px-6 gap-4 z-40 snap-x">
+<!-- Spacer for the dragged card hole -->
+<div class="min-w-[140px] h-[180px] rounded-xl border-2 border-dashed border-white/10 flex items-center justify-center snap-center">
+<span class="text-white/20 text-xs font-bold uppercase tracking-widest">Selected</span>
+</div>
+<!-- Card 2: Sponsored -->
+<div class="min-w-[200px] bg-[#E8FFE8] relative overflow-hidden text-black p-5 rounded-xl shadow-lg transform translate-y-4 hover:translate-y-0 transition-transform snap-center flex flex-col justify-between h-[220px]">
+<!-- Watermark -->
+<div class="absolute -right-4 -bottom-4 text-neon-green/20 rotate-[-15deg]">
+<span class="material-symbols-outlined" style="font-size: 120px; font-variation-settings: 'FILL' 1;">local_activity</span>
+</div>
+<div>
+<div class="flex items-center gap-1 mb-2">
+<span class="bg-neon-green text-black/[0.8] text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">Ad</span>
+</div>
+<p class="text-lg font-bold leading-tight relative z-10">
+                            Sponsored Challenge: Everyone take a shot OR the judge picks two winners.
+                        </p>
+</div>
+<div class="text-[10px] text-black/40 font-medium uppercase tracking-wider border-t border-black/10 pt-2 mt-2">
+                        Heineken Challenge
+                    </div>
+</div>
+<!-- Card 3: Standard -->
+<div class="min-w-[200px] bg-white text-black p-5 rounded-xl shadow-lg transform translate-y-4 hover:translate-y-0 transition-transform snap-center h-[220px] flex flex-col">
+<p class="text-lg font-bold leading-tight">
+                        My browser history.
+                    </p>
+</div>
+<!-- Card 4: Standard -->
+<div class="min-w-[200px] bg-white text-black p-5 rounded-xl shadow-lg transform translate-y-4 hover:translate-y-0 transition-transform snap-center h-[220px] flex flex-col">
+<p class="text-lg font-bold leading-tight">
+                        Explaining Bitcoin to my grandmother.
+                    </p>
+</div>
+<!-- Spacer -->
+<div class="min-w-[20px]"></div>
+</div>
+<!-- Bottom fade gradient -->
+<div class="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-[#121212] to-transparent z-50 pointer-events-none"></div>
+</div>
+</div>
+</body></html>

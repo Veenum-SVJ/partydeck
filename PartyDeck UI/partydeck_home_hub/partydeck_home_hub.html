@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PartyDeck Home Hub</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00eaff",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#121212", // Updated to match user request
+                        "surface-dark": "#1a1a1a",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                    boxShadow: {
+                        'neon-cyan': '0 0 15px rgba(0, 234, 255, 0.5), 0 0 5px rgba(0, 234, 255, 0.3)',
+                        'neon-white': '0 0 10px rgba(255, 255, 255, 0.3), inset 0 0 5px rgba(255, 255, 255, 0.1)',
+                        'neon-card': '0 4px 20px rgba(0, 0, 0, 0.5), 0 0 2px rgba(255, 255, 255, 0.1)',
+                    },
+                    backgroundImage: {
+                        'grid-pattern': "linear-gradient(to right, #1f2937 1px, transparent 1px), linear-gradient(to bottom, #1f2937 1px, transparent 1px)",
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hiding for horizontal scroll */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased selection:bg-primary selection:text-black">
+<div class="relative flex h-screen w-full flex-col overflow-hidden max-w-md mx-auto border-x border-white/5 shadow-2xl">
+<!-- Ambient Background Pattern -->
+<div class="absolute inset-0 pointer-events-none opacity-20">
+<div class="absolute inset-0 bg-grid-pattern bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)]"></div>
+<!-- Glowing orb effects -->
+<div class="absolute top-[-10%] left-[-10%] w-64 h-64 bg-primary/20 rounded-full blur-[100px]"></div>
+<div class="absolute bottom-[20%] right-[-10%] w-80 h-80 bg-purple-600/10 rounded-full blur-[120px]"></div>
+</div>
+<!-- Top App Bar -->
+<header class="relative z-10 flex items-center justify-between p-6 pt-8">
+<div class="w-12"><!-- Spacer to center logo --></div>
+<h1 class="text-white text-2xl font-bold tracking-tight uppercase flex items-center gap-2">
+<span class="text-primary material-symbols-outlined text-[32px]">stadia_controller</span>
+                PartyDeck
+            </h1>
+<div class="flex w-12 items-center justify-end">
+<button class="relative flex items-center justify-center w-10 h-10 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group">
+<span class="material-symbols-outlined text-white/80 group-hover:text-white transition-colors">person</span>
+<!-- Online Status Dot -->
+<span class="absolute top-0 right-0 w-3 h-3 bg-green-400 border-2 border-[#121212] rounded-full shadow-[0_0_8px_rgba(74,222,128,0.6)]"></span>
+</button>
+</div>
+</header>
+<!-- Main Content Area: Centered Actions -->
+<main class="relative z-10 flex-1 flex flex-col justify-center px-6 gap-6 pb-12">
+<div class="space-y-6 w-full max-w-[320px] mx-auto">
+<!-- Join Party Button -->
+<button class="group relative w-full h-24 rounded-2xl bg-primary text-[#121212] text-xl font-bold tracking-widest uppercase overflow-hidden transition-transform active:scale-95 shadow-neon-cyan hover:shadow-[0_0_25px_rgba(0,234,255,0.7)] border-none">
+<div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out skew-y-6 origin-bottom-left"></div>
+<span class="relative flex items-center justify-center gap-3">
+<span class="material-symbols-outlined text-3xl font-bold">login</span>
+                        Join Party
+                    </span>
+</button>
+<!-- Host Party Button -->
+<button class="group w-full h-24 rounded-2xl bg-transparent border-2 border-white/80 text-white text-xl font-bold tracking-widest uppercase transition-all active:scale-95 hover:bg-white/5 hover:border-white hover:shadow-neon-white backdrop-blur-sm">
+<span class="flex items-center justify-center gap-3">
+<span class="material-symbols-outlined text-3xl">add_circle</span>
+                        Host Party
+                    </span>
+</button>
+</div>
+<!-- Helper Text -->
+<p class="text-center text-white/40 text-sm font-medium tracking-wide mt-2">
+                Tap to start your session
+            </p>
+</main>
+<!-- Featured Decks Carousel -->
+<section class="relative z-10 pb-8 pt-4 bg-gradient-to-t from-[#121212] via-[#121212] to-transparent">
+<div class="px-6 mb-4 flex items-center justify-between">
+<h3 class="text-white text-sm font-bold tracking-wider uppercase opacity-80 flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_#00eaff]"></span>
+                    Featured Decks
+                </h3>
+<button class="text-xs text-primary font-medium hover:text-white transition-colors uppercase tracking-wide">View All</button>
+</div>
+<div class="flex overflow-x-auto hide-scrollbar px-6 pb-4 gap-4 snap-x snap-mandatory">
+<!-- Card 1 -->
+<div class="snap-center shrink-0 w-[200px] flex flex-col gap-3 group cursor-pointer">
+<div class="relative w-full aspect-[3/4] rounded-xl overflow-hidden border border-white/10 bg-surface-dark shadow-neon-card transition-all group-hover:border-primary/50 group-hover:shadow-[0_0_15px_rgba(0,234,255,0.15)]">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Cyberpunk city street at night with neon signs" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBYSAukkwQbeHWeOfAkAXSXLQbxMh5Hfq2BasQf_lOyO5BJpEuUzl0-Nmj288PmDtWLGK7niH_NZSVVY8817Lth6QgGOupl1aU4pr2QdVD0IHwrP8XvAl3q41NWke9amspXtXiRho2GGD4GUe8HbiZlZcU9aMOsj2p-MGJGkfhCMbqS9O6gDR4hmdeoYuevXXemex4pGx1HuuHdKHYHgOi3Sb-SRqQtazYYpMoCXUMcYMwF0XqRNWM5g7VlMGNXVuJztMz0WASY31vU");'></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+<!-- New Badge -->
+<div class="absolute top-3 right-3 bg-[#CCFF00] text-black text-[10px] font-bold px-2 py-1 rounded shadow-[0_0_10px_rgba(204,255,0,0.5)]">
+                            NEW
+                        </div>
+<div class="absolute bottom-3 left-3 right-3">
+<div class="flex items-center gap-1 text-primary text-xs mb-1">
+<span class="material-symbols-outlined text-[14px]">bolt</span>
+<span>Sci-Fi</span>
+</div>
+</div>
+</div>
+<div>
+<p class="text-white text-base font-bold leading-tight group-hover:text-primary transition-colors">Cyber City Pack</p>
+<p class="text-white/40 text-xs font-normal mt-1">Futuristic scenarios &amp; prompts</p>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="snap-center shrink-0 w-[200px] flex flex-col gap-3 group cursor-pointer">
+<div class="relative w-full aspect-[3/4] rounded-xl overflow-hidden border border-white/10 bg-surface-dark shadow-neon-card transition-all group-hover:border-purple-500/50 group-hover:shadow-[0_0_15px_rgba(168,85,247,0.2)]">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Retro computer terminal with glowing green text" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCYsZQnuVMOHqlTsCFfhXSnLogAzSRVcubsnUrVQ8LWdQxOygy_JMdt_xAA3HueQnuaqS7bVFeHKIpjdhckeF2saXVeNwc12vbV_USv_Gu8X9yf25e6TIlSTlaUdQlBsF_est4Ukv3h7YYSWEP6_mEYoktDava2YjnELD1yDgrUXby5BFmQKANi7kTnka-nCraDFzIo4qikjZLbO4nSO7uegoD0m_zQqJd1ZM2UF-U9xhsYdSLNziG6X0yfCqFAOIdJux5MyKh5OuHU");'></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+<div class="absolute bottom-3 left-3 right-3">
+<div class="flex items-center gap-1 text-purple-400 text-xs mb-1">
+<span class="material-symbols-outlined text-[14px]">headphones</span>
+<span>80s Synth</span>
+</div>
+</div>
+</div>
+<div>
+<p class="text-white text-base font-bold leading-tight group-hover:text-purple-400 transition-colors">Retro Wave Edition</p>
+<p class="text-white/40 text-xs font-normal mt-1">Nostalgia &amp; neon dreams</p>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="snap-center shrink-0 w-[200px] flex flex-col gap-3 group cursor-pointer">
+<div class="relative w-full aspect-[3/4] rounded-xl overflow-hidden border border-white/10 bg-surface-dark shadow-neon-card transition-all group-hover:border-pink-500/50 group-hover:shadow-[0_0_15px_rgba(236,72,153,0.2)]">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Abstract blurry city lights bokeh at night" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDyGHJvVxZ5MFmLbsyhUD7RmFxh8PqXfLTnNZxk37hdVwYMDA32-esso98XlUo0o4j-z1dXKSaQLtGp6Fc6_p8TlGL5N5uPEWmE4GTkfniustz10V7Ak2bhrxIpxWoym7oepC4EpsF8uqEoLKkfklryV1QFYfqlU1doy7oorGLahCtXWNtrubTQ8TknOXznEJD7YDQWthb5Mtiy1r7zmhnji--a_Xid6WzTEI-45BeOPayShhSYhiAUY4Ch596AaOO_Na5_rkol1qIr");'></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+<div class="absolute bottom-3 left-3 right-3">
+<div class="flex items-center gap-1 text-pink-500 text-xs mb-1">
+<span class="material-symbols-outlined text-[14px]">nightlight</span>
+<span>Deep Talk</span>
+</div>
+</div>
+</div>
+<div>
+<p class="text-white text-base font-bold leading-tight group-hover:text-pink-500 transition-colors">Late Night Talks</p>
+<p class="text-white/40 text-xs font-normal mt-1">Secrets &amp; stories</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Bottom Safe Area -->
+<div class="h-6 w-full bg-[#121212]"></div>
+</div>
+</body></html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PartyDeck - Round Results</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#06e4f9",
+                        "secondary": "#ff00ff", /* Added a secondary neon pink for ad CTA contrast */
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0f1214", /* Darker, slightly blue-ish charcoal */
+                        "surface-dark": "#1a1f24",
+                        "surface-dark-2": "#232930",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                    boxShadow: {
+                        'neon': '0 0 10px rgba(6, 228, 249, 0.5), 0 0 20px rgba(6, 228, 249, 0.3)',
+                        'neon-pink': '0 0 10px rgba(255, 0, 255, 0.5), 0 0 20px rgba(255, 0, 255, 0.3)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Confetti Animation */
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #06e4f9;
+            opacity: 0;
+        }
+
+        .confetti:nth-child(even) { background: #ff00ff; }
+        .confetti:nth-child(3n) { background: #ffffff; }
+
+        .confetti-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60vh;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* Generating random confetti positions */
+        .confetti:nth-child(1) { left: 10%; animation: fall 3s linear infinite; animation-delay: 0.2s; }
+        .confetti:nth-child(2) { left: 20%; animation: fall 4s linear infinite; animation-delay: 0.5s; }
+        .confetti:nth-child(3) { left: 30%; animation: fall 2.5s linear infinite; animation-delay: 0.1s; }
+        .confetti:nth-child(4) { left: 40%; animation: fall 3.5s linear infinite; animation-delay: 0.8s; }
+        .confetti:nth-child(5) { left: 50%; animation: fall 3s linear infinite; animation-delay: 1.2s; }
+        .confetti:nth-child(6) { left: 60%; animation: fall 4.2s linear infinite; animation-delay: 0.3s; }
+        .confetti:nth-child(7) { left: 70%; animation: fall 2.8s linear infinite; animation-delay: 0.7s; }
+        .confetti:nth-child(8) { left: 80%; animation: fall 3.8s linear infinite; animation-delay: 1.5s; }
+        .confetti:nth-child(9) { left: 90%; animation: fall 3.2s linear infinite; animation-delay: 0.4s; }
+        .confetti:nth-child(10) { left: 15%; animation: fall 4s linear infinite; animation-delay: 1.8s; }
+        .confetti:nth-child(11) { left: 85%; animation: fall 2.9s linear infinite; animation-delay: 2.0s; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-white antialiased overflow-x-hidden">
+<!-- Main Container -->
+<div class="relative flex h-full min-h-screen w-full flex-col max-w-md mx-auto shadow-2xl bg-background-light dark:bg-background-dark">
+<!-- Background decorative glow -->
+<div class="fixed top-0 left-0 w-full h-96 bg-gradient-to-b from-primary/10 to-transparent pointer-events-none z-0"></div>
+<!-- Confetti Overlay -->
+<div class="confetti-container">
+<div class="confetti"></div><div class="confetti"></div><div class="confetti"></div>
+<div class="confetti"></div><div class="confetti"></div><div class="confetti"></div>
+<div class="confetti"></div><div class="confetti"></div><div class="confetti"></div>
+<div class="confetti"></div><div class="confetti"></div>
+</div>
+<!-- Header -->
+<header class="relative z-10 flex items-center justify-between p-4 pb-2 bg-transparent">
+<button class="flex size-10 items-center justify-center rounded-full bg-surface-dark/50 text-white hover:bg-surface-dark transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h2 class="text-white text-lg font-bold tracking-widest uppercase glow-text drop-shadow-[0_0_5px_rgba(6,228,249,0.5)]">Round Complete</h2>
+<button class="flex h-10 px-4 items-center justify-center rounded-full bg-surface-dark/50 text-[#9bb8bb] text-sm font-bold hover:text-white hover:bg-surface-dark transition-colors">
+                Exit
+            </button>
+</header>
+<!-- Main Content Scroll Area -->
+<div class="flex-1 overflow-y-auto pb-24 z-10 scrollbar-hide">
+<!-- Winner Spotlight -->
+<section class="flex flex-col items-center justify-center pt-6 pb-8 px-4">
+<div class="relative group">
+<!-- Glow Ring -->
+<div class="absolute -inset-1 rounded-full bg-gradient-to-tr from-primary via-blue-500 to-secondary opacity-75 blur-md group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
+<!-- Avatar -->
+<div class="relative size-36 rounded-full border-4 border-surface-dark bg-surface-dark bg-center bg-cover" data-alt="Profile picture of the winner, a smiling person with colorful lighting" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBPGEl5YsYhveYqg57-y0OEA3Qp1irtJC4lMEc-S_hy8uWLEtO38YNZF5lxZre-IAZ2XlTabUNmbu_PLzQ3W4SlL3k4X3c4MjAt2wWlfHnRhBx2y6-98jKRbP8KNvgQ3iZX3lHNF7BEwHbiJM1gPnoWaVSI7tSqJifliQmIMRNyrpCGmakfMpKqqqHzZ25yZuk4W0KiejLkWy5wZUoHFKcR88qcJNmXtUENbu1bKvU8lR_6-0RV5KhAiBOfe-skloBGpZGNFmtuaLl8');">
+</div>
+<!-- Rank Badge -->
+<div class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-primary text-background-dark px-4 py-1 rounded-full font-bold text-sm shadow-neon border-2 border-background-dark whitespace-nowrap z-20">
+                        1ST PLACE
+                    </div>
+</div>
+<div class="mt-6 text-center space-y-1">
+<h1 class="text-3xl font-bold text-white tracking-tight drop-shadow-md">CyberSamurai</h1>
+<p class="text-primary font-bold text-xl tracking-widest drop-shadow-[0_0_8px_rgba(6,228,249,0.4)]">12,500 PTS</p>
+</div>
+</section>
+<!-- Native Ad Container -->
+<section class="px-4 mb-8">
+<div class="relative overflow-hidden rounded-xl bg-surface-dark border border-white/5 shadow-lg group">
+<!-- Subtle Ad Label -->
+<div class="absolute top-3 right-3 z-20">
+<span class="bg-black/60 backdrop-blur-sm px-2 py-0.5 rounded text-[10px] font-bold text-gray-400 border border-white/10 tracking-wider">SPONSORED</span>
+</div>
+<div class="flex flex-row h-32">
+<!-- Image Half -->
+<div class="w-2/5 h-full relative">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Close up of a delicious pepperoni pizza slice being lifted with melted cheese" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC9LqZLp5bDpnCegrnr1C-tcdWbr8zckTD6aIHYWR57bsEiVFOX4KON1NhCbse0ciuFOm0IzbPm8qEkT6NP9lRMAm95U9lyDbPuNp-UZUO9vHb877r76qN1D57xp7EAPq8nIU_SG_sAbTtUF7nofbLx_4R0FSL_hfHqJ2uwy6sAkuJc2OqKRwOL9dIFHcBEid18OJRVRccHd0g2DGUKSsfQcoOnFm0lNCFXLV7f-6ncR_B5hgUEC6pZWmrp6iZCu7QKaPx5Rv7Bfh9-');">
+</div>
+<!-- Gradient Overlay for readability transition -->
+<div class="absolute inset-0 bg-gradient-to-r from-transparent to-surface-dark"></div>
+</div>
+<!-- Content Half -->
+<div class="w-3/5 p-3 flex flex-col justify-center relative z-10 pl-0">
+<h3 class="text-white font-bold text-lg leading-tight mb-1">Fuel Your Next Round</h3>
+<p class="text-gray-400 text-xs mb-3 line-clamp-2">Level up your energy with a hot slice delivered now.</p>
+<button class="self-start bg-secondary hover:bg-pink-500 text-white text-xs font-bold py-2 px-4 rounded-full shadow-neon-pink transition-all transform active:scale-95 flex items-center gap-1">
+<span>ORDER NOW</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- decorative scanline -->
+<div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz48L3N2Zz4=')] opacity-20 pointer-events-none"></div>
+</div>
+</section>
+<!-- Scoreboard List -->
+<section class="px-4 space-y-3">
+<h3 class="text-gray-500 text-xs font-bold uppercase tracking-widest mb-2 ml-2">Leaderboard</h3>
+<!-- Rank 2 -->
+<div class="flex items-center gap-3 p-3 bg-surface-dark border border-white/5 rounded-full shadow-sm hover:border-primary/30 transition-colors">
+<div class="flex items-center justify-center w-8 h-8 rounded-full bg-surface-dark-2 text-white font-bold text-sm border border-white/10 shrink-0">
+                        2
+                    </div>
+<div class="relative w-10 h-10 rounded-full bg-gray-700 bg-cover bg-center shrink-0 border border-white/10" data-alt="Avatar of user NeonNinja" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCBuj7AGdeXd9t7gsniSx-OExpaQLk_tBCKCS5704QGTLHKW8HL9w4_T3UHTwisHXDV91gp_05c15X_C5F5wv1eQaqGbeeOfP1xazIPePRua_kHy4WgHcKKYO9pF4BL5zJ_N7xKpq1T8sfk61HV3wWGdfE06GpVJ48wKaR6Be_90vDLsBuoWft0xMai-iPR-X5oUEgaTORqQomTGiiNmyw2T8Yc87OpDsw4iT3Bf2gYNU4pjdmpy_sqclYA_bUohxZhXV6S599aXF08');">
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-white font-bold truncate">NeonNinja</p>
+</div>
+<div class="text-primary font-bold text-lg pr-2">11,200</div>
+</div>
+<!-- Rank 3 -->
+<div class="flex items-center gap-3 p-3 bg-surface-dark border border-white/5 rounded-full shadow-sm hover:border-primary/30 transition-colors">
+<div class="flex items-center justify-center w-8 h-8 rounded-full bg-surface-dark-2 text-white font-bold text-sm border border-white/10 shrink-0">
+                        3
+                    </div>
+<div class="relative w-10 h-10 rounded-full bg-gray-700 bg-cover bg-center shrink-0 border border-white/10" data-alt="Avatar of user RetroRacer" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDScrk5rC_6XzC11TvaEZTDQs9Bu6RFpF9pm8csJ_WU3luPNfMHaPl3LOa5Vt4TUMNFTJJ36MWOUmCyzyx7XKRS8VWO2C1KSRnLh4dBD_LfKqH5VsgQVj_4pwy4964W8JFTwiAbqrMZ66j9FFA6cpY_uoI2x7qPRDvxPPj7ddo-8Mlb9wO7NtIMl7YeSoSwl2lQJqaM-KKuaPdBBjHNSSCtSru36Vm32MlaAXD2U1DfhfPwIP6qTwtdIAXr8y7ooFeJHXlLMNAnAFBH');">
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-white font-bold truncate">RetroRacer</p>
+</div>
+<div class="text-gray-300 font-bold text-lg pr-2">9,850</div>
+</div>
+<!-- Rank 4 -->
+<div class="flex items-center gap-3 p-3 bg-surface-dark border border-white/5 rounded-full shadow-sm hover:border-primary/30 transition-colors">
+<div class="flex items-center justify-center w-8 h-8 rounded-full bg-surface-dark-2 text-gray-400 font-bold text-sm border border-white/10 shrink-0">
+                        4
+                    </div>
+<div class="relative w-10 h-10 rounded-full bg-gray-700 bg-cover bg-center shrink-0 border border-white/10" data-alt="Avatar of user GlitchGamer" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC8M8cBYW6QjGqcGFDafq8r5ThQYWNS6FqVmCUVNg65CMBy6FPmNFc5VuPeNfT0f-9X90o-0T887QleO2n3WClVkaOD_A03cFggmDiOSudOtHR2a0TagfrSd8wR8LQuuZm4Y2JIClfk7PY4tPIKGEKcSKN0WTN3GZcqHIJ8ZDigkCBjSNcwyuDoOtxPIxEg7TyODtX_sdlCFTmzqI151fn_Y2Hjv7vH7FkK1xLiL9uI2VouNfKe81rNIhYOevoubfSDrc2muapONLDU');">
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-gray-300 font-medium truncate">GlitchGamer</p>
+</div>
+<div class="text-gray-400 font-bold text-lg pr-2">8,400</div>
+</div>
+<!-- Rank 5 -->
+<div class="flex items-center gap-3 p-3 bg-surface-dark border border-white/5 rounded-full shadow-sm hover:border-primary/30 transition-colors">
+<div class="flex items-center justify-center w-8 h-8 rounded-full bg-surface-dark-2 text-gray-500 font-bold text-sm border border-white/10 shrink-0">
+                        5
+                    </div>
+<div class="relative w-10 h-10 rounded-full bg-gray-700 bg-cover bg-center shrink-0 border border-white/10" data-alt="Avatar of user PixelPunk" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD002QrCZSThEyWur8Hpv8LZTYDd55RiwcIuqGn_IEXQ-AAI-YTBIE3yybezVAZeuSP4s_cCAVVtyGTPM708rPXN_qdD1L4JTM338-9G5AEEAlfrBXPIVkoER_qGrg175WCZjlCrm0BaiCAzwIbG8n4u8ADESjZnON7FVOvr8Fa4y4S0pJlcC75vD2spsR9eZL6DVhueY-D07kTt2Z_mVLwX3ZfLYVjM33W95Db4J3vcYBfSJYS5o6VYLQmuUsl4c_ScR7je7iJlCm8');">
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-gray-400 font-medium truncate">PixelPunk</p>
+</div>
+<div class="text-gray-500 font-bold text-lg pr-2">7,200</div>
+</div>
+</section>
+</div>
+<!-- Sticky Bottom Actions -->
+<div class="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-background-dark via-background-dark to-transparent z-30">
+<button class="w-full flex items-center justify-center gap-2 h-14 bg-primary hover:bg-cyan-400 text-background-dark text-lg font-bold rounded-full shadow-neon transition-all transform active:scale-95 group">
+<span class="material-symbols-outlined transition-transform group-hover:translate-x-1">play_arrow</span>
+                NEXT ROUND
+            </button>
+</div>
+</div>
+</body></html>

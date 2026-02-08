@@ -32,7 +32,7 @@ class _GameScreenState extends State<GameScreen> {
   late SupabaseService _supabaseService;
   late Stream<GameState> _gameStream;
   
-  // Registry of engines (Move to a provider later)
+  // Registry of engines
   final Map<String, GameEngine> _engines = {
     'E3_TASK': E3TaskEngine(),
     'E1_JUDGE': E1JudgeEngine(),
@@ -47,11 +47,6 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   Future<void> _handleAction(GameState currentState, Map<String, dynamic> action) async {
-    // For E1, anyone can submit. For E3, only host controls flow.
-    // Ideally, the Engine validates internally.
-    // We pass the action to the engine, get new state, and push.
-    // In real app: Edge Function should validate. Here: Client trust.
-
     final engineId = currentState.activeDeck?.engineType ?? 'E3_TASK';
     final engine = _engines[engineId];
     
@@ -64,58 +59,53 @@ class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF2A0033),
-              AppTheme.backgroundBlack,
-            ],
-          ),
-        ),
-        child: StreamBuilder<GameState>(
-          initialData: widget.initialState,
-          stream: _gameStream,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
-            
-            final state = snapshot.data!;
-            final currentDeck = state.activeDeck;
-            final engineId = currentDeck?.engineType ?? 'E3_TASK'; // Default to E3 for testing
+      backgroundColor: AppTheme.backgroundBlack,
+      body: StreamBuilder<GameState>(
+        initialData: widget.initialState,
+        stream: _gameStream,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(color: AppTheme.primaryCyan),
+            );
+          }
+          
+          final state = snapshot.data!;
+          final currentDeck = state.activeDeck;
+          final engineId = currentDeck?.engineType ?? 'E3_TASK';
 
-            // Render specific engine UI
-            if (engineId == 'E3_TASK') {
-               // Safe access to card
-              final deckContent = currentDeck?.content ?? [];
-              final cardIndex = state.currentCardIndex;
-              final card = (deckContent.isNotEmpty && cardIndex < deckContent.length)
-                  ? deckContent[cardIndex]
-                  : null;
+          // Get current card safely
+          final deckContent = currentDeck?.content ?? [];
+          final cardIndex = state.currentCardIndex;
+          final card = (deckContent.isNotEmpty && cardIndex < deckContent.length)
+              ? deckContent[cardIndex]
+              : null;
 
-              if (card == null) {
-                return Center(child: Text('Empty Deck or Invalid Index', style: TextStyle(color: Colors.white)));
-              }
+          if (card == null) {
+            return _buildEmptyState();
+          }
 
+          // Render specific engine UI
+          switch (engineId) {
+            case 'E3_TASK':
               return E3GameWidget(
                 card: card,
-                isHost: widget.player.isHost,
+                gameState: state,
+                player: widget.player,
                 onNextCard: () => _handleAction(state, {'type': 'next_card'}),
+                onSuccess: () => _handleAction(state, {
+                  'type': 'task_result',
+                  'player_id': widget.player.id,
+                  'success': true,
+                }),
+                onFail: () => _handleAction(state, {
+                  'type': 'task_result',
+                  'player_id': widget.player.id,
+                  'success': false,
+                }),
               );
-            }
 
-
-
-            if (engineId == 'E1_JUDGE') {
-              // Find the prompt card (Active card pointer)
-              final deckContent = currentDeck?.content ?? [];
-              // Safe access for prototype
-              final cardIndex = state.currentCardIndex;
-               final card = (deckContent.isNotEmpty && cardIndex < deckContent.length)
-                  ? deckContent[cardIndex]
-                  : CardModel(id: 'err', text: 'Error: Card Index OOB', category: 'PROMPT');
-              
+            case 'E1_JUDGE':
               return E1GameWidget(
                 gameState: state,
                 player: widget.player,
@@ -130,15 +120,8 @@ class _GameScreenState extends State<GameScreen> {
                   'winner_id': winnerId,
                 }),
               );
-            }
 
-            if (engineId == 'E2_VOTING') {
-              final deckContent = currentDeck?.content ?? [];
-              final cardIndex = state.currentCardIndex;
-              final card = (deckContent.isNotEmpty && cardIndex < deckContent.length)
-                  ? deckContent[cardIndex]
-                  : CardModel(id: 'err', text: 'Error: Card Index OOB', category: 'VOTE');
-
+            case 'E2_VOTING':
               return E2GameWidget(
                 gameState: state,
                 player: widget.player,
@@ -150,11 +133,32 @@ class _GameScreenState extends State<GameScreen> {
                 }),
                 onNextRound: () => _handleAction(state, {'type': 'next_round'}),
               );
-            }
 
-            return Center(child: Text('Unknown Engine: $engineId'));
-          },
-        ),
+            default:
+              return Center(
+                child: Text(
+                  'Unknown Engine: $engineId',
+                  style: TextStyle(color: Colors.white),
+                ),
+              );
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.inbox, color: Colors.white24, size: 64),
+          const SizedBox(height: 16),
+          Text(
+            'No cards available',
+            style: TextStyle(color: Colors.white54, fontSize: 18),
+          ),
+        ],
       ),
     );
   }

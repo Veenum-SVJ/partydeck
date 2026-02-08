@@ -30,7 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // In a real app, use Riverpod to providing this
     _supabaseService = SupabaseService(Supabase.instance.client);
   }
 
@@ -43,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() => _isLoading = true);
     try {
       final host = Player(
-        id: const Uuid().v4(), // Placeholder until we have Auth
+        id: const Uuid().v4(),
         nickname: _nicknameController.text,
         isHost: true,
         avatarUrl: _selectedAvatar,
@@ -96,241 +95,654 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.backgroundBlack,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Top Bar
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'PARTYDECK',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      color: AppTheme.primaryCyan,
-                      letterSpacing: 1.5,
-                    ),
-                  ),
-                  CircleAvatar(
-                    backgroundColor: AppTheme.surfaceGrey,
-                    child: Icon(Icons.person, color: AppTheme.primaryCyan),
-                  ),
-                ],
-              ),
-            ),
-            
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SizedBox(height: 20),
-                    
-                    // Input Section (Nickname + Avatar)
-                    Text('WHO ARE YOU?', style: Theme.of(context).textTheme.labelLarge),
-                    const SizedBox(height: 12),
-                    TextField(
-                      controller: _nicknameController,
-                      style: Theme.of(context).textTheme.bodyLarge,
-                      decoration: InputDecoration(
-                        hintText: 'Enter Nickname',
-                        hintStyle: TextStyle(color: Colors.white24),
-                        filled: true,
-                        fillColor: AppTheme.surfaceGrey,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
-                        ),
-                        prefixIcon: Icon(Icons.edit, color: Colors.white54),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      height: 60,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _avatars.length,
-                        separatorBuilder: (_, __) => const SizedBox(width: 12),
-                        itemBuilder: (context, index) {
-                          final avatar = _avatars[index];
-                          final isSelected = avatar == _selectedAvatar;
-                          return GestureDetector(
-                            onTap: () => setState(() => _selectedAvatar = avatar),
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 200),
-                              width: 60,
-                              decoration: BoxDecoration(
-                                color: isSelected ? AppTheme.primaryCyan : AppTheme.surfaceGrey,
-                                borderRadius: BorderRadius.circular(30),
-                                border: isSelected ? Border.all(color: Colors.white, width: 2) : null,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  avatar,
-                                  style: const TextStyle(fontSize: 30),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    
-                    const SizedBox(height: 48),
-
-                    // Main Actions
-                    SizedBox(
-                      height: 80,
-                      child: ElevatedButton(
-                        onPressed: _isLoading ? null : () {
-                           // Show Join Dialog/Input
-                           showDialog(
-                             context: context,
-                             builder: (c) => _buildJoinDialog(c),
-                           );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppTheme.primaryCyan,
-                        ),
-                        child: _isLoading 
-                          ? const CircularProgressIndicator(color: Colors.black)
-                          : const Text('JOIN PARTY', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      height: 80,
-                      child: OutlinedButton(
-                        onPressed: _isLoading ? null : _createGame,
-                        style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Colors.white, width: 2),
-                          foregroundColor: Colors.white,
-                        ),
-                        child: const Text('HOST PARTY', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                      ),
-                    ),
-
-                    const SizedBox(height: 48),
-                    
-                    // Featured Decks Carousel (with Ad Injection)
-                    Text('FEATURED DECKS', style: Theme.of(context).textTheme.labelLarge),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      height: 160,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          _buildDeckCard('Base Set', Colors.purple, 'The classic experience.'),
-                          const SizedBox(width: 16),
-                          _buildDeckCard('Filthy Blanks', Colors.red, 'Not for kids.'),
-                          const SizedBox(width: 16),
-                          // Ad Injection
-                          _buildAdCard('Sponsored: The Chili\'s Deck', Colors.orange),
-                          const SizedBox(width: 16),
-                          _buildDeckCard('Voting Pack', Colors.blue, 'Judge your friends.'),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildJoinDialog(BuildContext context) {
-    return AlertDialog(
-      backgroundColor: AppTheme.surfaceGrey,
-      title: const Text('ENTER ROOM CODE', style: TextStyle(color: Colors.white)),
-      content: TextField(
-        controller: _roomCodeController,
-        style: const TextStyle(color: Colors.white, letterSpacing: 5, fontSize: 24),
-        textCapitalization: TextCapitalization.characters,
-        textAlign: TextAlign.center,
-        decoration: const InputDecoration(
-          hintText: 'ABCD',
-          hintStyle: TextStyle(color: Colors.white24),
-          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppTheme.primaryCyan)),
-          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppTheme.primaryCyan, width: 2)),
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('CANCEL', style: TextStyle(color: Colors.white54)),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context);
-            _joinGame();
-          },
-          child: const Text('JOIN'),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDeckCard(String title, Color color, String subtitle) {
-    return Container(
-      width: 140,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color.withAlpha(50),      
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withAlpha(100)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: Stack(
         children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(color: color.withAlpha(50), shape: BoxShape.circle),
-            child: Icon(Icons.style, color: color),
+          // Ambient Background Pattern
+          Positioned.fill(
+            child: _buildAmbientBackground(),
           ),
-          const Spacer(),
-          Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
-          const SizedBox(height: 4),
-          Text(subtitle, style: const TextStyle(color: Colors.white54, fontSize: 12), maxLines: 2, overflow: TextOverflow.ellipsis),
+          
+          // Main Content
+          SafeArea(
+            child: Column(
+              children: [
+                // Top App Bar
+                _buildTopBar(),
+                
+                // Main Content Area
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 20),
+                        
+                        // Player Setup (Nickname + Avatar)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          child: _buildPlayerSetup(),
+                        ),
+                        
+                        const SizedBox(height: 40),
+                        
+                        // Main Action Buttons
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          child: _buildActionButtons(),
+                        ),
+                        
+                        const SizedBox(height: 12),
+                        
+                        // Helper Text
+                        Text(
+                          'Tap to start your session',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.white.withValues(alpha: 0.4),
+                          ),
+                        ),
+                        
+                        const SizedBox(height: 40),
+                        
+                        // Featured Decks Carousel
+                        _buildFeaturedDecks(),
+                        
+                        const SizedBox(height: 24),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildAdCard(String title, Color color) {
+  Widget _buildAmbientBackground() {
+    return Stack(
+      children: [
+        // Grid Pattern
+        Positioned.fill(
+          child: Opacity(
+            opacity: 0.2,
+            child: CustomPaint(
+              painter: _GridPatternPainter(),
+            ),
+          ),
+        ),
+        // Glowing Orb - Top Left
+        Positioned(
+          top: -50,
+          left: -50,
+          child: Container(
+            width: 256,
+            height: 256,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: RadialGradient(
+                colors: [
+                  AppTheme.primaryCyan.withValues(alpha: 0.2),
+                  Colors.transparent,
+                ],
+              ),
+            ),
+          ),
+        ),
+        // Glowing Orb - Bottom Right
+        Positioned(
+          bottom: 100,
+          right: -80,
+          child: Container(
+            width: 320,
+            height: 320,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: RadialGradient(
+                colors: [
+                  Colors.purple.withValues(alpha: 0.1),
+                  Colors.transparent,
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTopBar() {
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const SizedBox(width: 48), // Spacer
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.gamepad,
+                color: AppTheme.primaryCyan,
+                size: 32,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'PARTYDECK',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  color: Colors.white,
+                  letterSpacing: 1.5,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          // Profile Button with Online Status
+          Stack(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withValues(alpha: 0.05),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                ),
+                child: Icon(Icons.person, color: Colors.white.withValues(alpha: 0.8)),
+              ),
+              // Online Status Dot
+              Positioned(
+                top: 0,
+                right: 0,
+                child: Container(
+                  width: 12,
+                  height: 12,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.green.shade400,
+                    border: Border.all(color: AppTheme.backgroundBlack, width: 2),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.green.shade400.withValues(alpha: 0.6),
+                        blurRadius: 8,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPlayerSetup() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'WHO ARE YOU?',
+          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+            color: Colors.white.withValues(alpha: 0.6),
+          ),
+        ),
+        const SizedBox(height: 12),
+        TextField(
+          controller: _nicknameController,
+          style: Theme.of(context).textTheme.bodyLarge,
+          decoration: InputDecoration(
+            hintText: 'Enter Nickname',
+            prefixIcon: Icon(Icons.edit, color: Colors.white.withValues(alpha: 0.5)),
+          ),
+        ),
+        const SizedBox(height: 16),
+        // Avatar Selection
+        SizedBox(
+          height: 60,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: _avatars.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            itemBuilder: (context, index) {
+              final avatar = _avatars[index];
+              final isSelected = avatar == _selectedAvatar;
+              return GestureDetector(
+                onTap: () => setState(() => _selectedAvatar = avatar),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  width: 60,
+                  decoration: BoxDecoration(
+                    color: isSelected ? AppTheme.primaryCyan : AppTheme.surfaceDark,
+                    borderRadius: BorderRadius.circular(30),
+                    border: isSelected 
+                      ? Border.all(color: Colors.white, width: 2) 
+                      : Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                    boxShadow: isSelected ? AppTheme.neonCyanGlow : null,
+                  ),
+                  child: Center(
+                    child: Text(avatar, style: const TextStyle(fontSize: 28)),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActionButtons() {
+    return Column(
+      children: [
+        // JOIN PARTY Button - Primary Neon Cyan
+        GestureDetector(
+          onTap: _isLoading ? null : () => _showJoinDialog(),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            height: 96,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: AppTheme.primaryCyan,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: AppTheme.neonCyanGlow,
+            ),
+            child: _isLoading 
+              ? const Center(child: CircularProgressIndicator(color: Colors.black))
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.login, color: AppTheme.backgroundBlack, size: 32),
+                    const SizedBox(width: 12),
+                    Text(
+                      'JOIN PARTY',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        color: AppTheme.backgroundBlack,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 3,
+                      ),
+                    ),
+                  ],
+                ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        // HOST PARTY Button - Outlined White
+        GestureDetector(
+          onTap: _isLoading ? null : _createGame,
+          child: Container(
+            height: 96,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.8), width: 2),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.add_circle_outline, color: Colors.white, size: 32),
+                const SizedBox(width: 12),
+                Text(
+                  'HOST PARTY',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 3,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _showJoinDialog() {
+    showDialog(
+      context: context,
+      builder: (c) => AlertDialog(
+        backgroundColor: AppTheme.surfaceGrey,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        title: Text(
+          'ENTER ROOM CODE',
+          style: TextStyle(color: Colors.white, letterSpacing: 2),
+          textAlign: TextAlign.center,
+        ),
+        content: TextField(
+          controller: _roomCodeController,
+          style: const TextStyle(color: Colors.white, letterSpacing: 8, fontSize: 32),
+          textCapitalization: TextCapitalization.characters,
+          textAlign: TextAlign.center,
+          maxLength: 4,
+          decoration: InputDecoration(
+            hintText: 'ABCD',
+            hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.2)),
+            counterText: '',
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: AppTheme.primaryCyan),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: AppTheme.primaryCyan, width: 2),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(c),
+            child: Text('CANCEL', style: TextStyle(color: Colors.white.withValues(alpha: 0.5))),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(c);
+              _joinGame();
+            },
+            child: const Text('JOIN'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFeaturedDecks() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 6,
+                    height: 6,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppTheme.primaryCyan,
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppTheme.primaryCyan,
+                          blurRadius: 8,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'FEATURED DECKS',
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      color: Colors.white.withValues(alpha: 0.8),
+                    ),
+                  ),
+                ],
+              ),
+              TextButton(
+                onPressed: () {},
+                child: Text(
+                  'VIEW ALL',
+                  style: TextStyle(
+                    color: AppTheme.primaryCyan,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                    letterSpacing: 1,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        SizedBox(
+          height: 280,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            children: [
+              _buildDeckCard(
+                title: 'Cyber City Pack',
+                subtitle: 'Futuristic scenarios & prompts',
+                category: 'Sci-Fi',
+                categoryIcon: Icons.bolt,
+                accentColor: AppTheme.primaryCyan,
+                isNew: true,
+              ),
+              const SizedBox(width: 16),
+              _buildDeckCard(
+                title: 'Retro Wave Edition',
+                subtitle: 'Nostalgia & neon dreams',
+                category: '80s Synth',
+                categoryIcon: Icons.headphones,
+                accentColor: Colors.purple,
+              ),
+              const SizedBox(width: 16),
+              _buildSponsoredDeckCard(),
+              const SizedBox(width: 16),
+              _buildDeckCard(
+                title: 'Late Night Talks',
+                subtitle: 'Secrets & stories',
+                category: 'Deep Talk',
+                categoryIcon: Icons.nightlight,
+                accentColor: Colors.pink,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDeckCard({
+    required String title,
+    required String subtitle,
+    required String category,
+    required IconData categoryIcon,
+    required Color accentColor,
+    bool isNew = false,
+  }) {
     return Container(
-      width: 140,
-      padding: const EdgeInsets.all(16),
+      width: 200,
       decoration: BoxDecoration(
-        color: AppTheme.surfaceGrey,      
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.amber.withAlpha(100)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Icon(Icons.star, color: Colors.amber, size: 20),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(color: Colors.black54, borderRadius: BorderRadius.circular(4)),
-                child: const Text('Ad', style: TextStyle(color: Colors.white, fontSize: 10)),
-              )
-            ],
+          // Card Image Area
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                color: AppTheme.surfaceDark,
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    accentColor.withValues(alpha: 0.3),
+                    AppTheme.backgroundBlack,
+                  ],
+                ),
+              ),
+              child: Stack(
+                children: [
+                  // Category Badge
+                  Positioned(
+                    bottom: 12,
+                    left: 12,
+                    child: Row(
+                      children: [
+                        Icon(categoryIcon, color: accentColor, size: 14),
+                        const SizedBox(width: 4),
+                        Text(
+                          category,
+                          style: TextStyle(color: accentColor, fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // NEW Badge
+                  if (isNew)
+                    Positioned(
+                      top: 12,
+                      right: 12,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: AppTheme.accentYellow,
+                          borderRadius: BorderRadius.circular(4),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppTheme.accentYellow.withValues(alpha: 0.5),
+                              blurRadius: 10,
+                            ),
+                          ],
+                        ),
+                        child: const Text(
+                          'NEW',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
           ),
-          const Spacer(),
-          Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
-          const SizedBox(height: 4),
-          const Text('Tap to unlock exclusive cards.', style: TextStyle(color: Colors.amber, fontSize: 12)),
+          // Card Info
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.4),
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSponsoredDeckCard() {
+    return Container(
+      width: 200,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.amber.withValues(alpha: 0.3)),
+        color: AppTheme.surfaceGrey,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.amber.withValues(alpha: 0.2),
+                    AppTheme.surfaceGrey,
+                  ],
+                ),
+              ),
+              child: Stack(
+                children: [
+                  Center(
+                    child: Icon(
+                      Icons.local_bar,
+                      color: Colors.amber.withValues(alpha: 0.5),
+                      size: 64,
+                    ),
+                  ),
+                  Positioned(
+                    top: 12,
+                    right: 12,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.5),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: const Text(
+                        'Ad',
+                        style: TextStyle(color: Colors.white, fontSize: 10),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'The Miller Lite Deck',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Tap to unlock exclusive cards.',
+                  style: TextStyle(color: Colors.amber, fontSize: 12),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
+// Custom Painter for Grid Pattern
+class _GridPatternPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.white.withValues(alpha: 0.05)
+      ..strokeWidth = 1;
+
+    const gridSize = 40.0;
+    
+    // Vertical lines
+    for (double x = 0; x < size.width; x += gridSize) {
+      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
+    }
+    
+    // Horizontal lines
+    for (double y = 0; y < size.height; y += gridSize) {
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}

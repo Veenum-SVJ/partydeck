@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PartyDeck Lobby</title>
+<!-- Fonts and Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00eaff",
+                        "secondary": "#FF2975",
+                        "accent": "#CCFF00",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#121212",
+                        "surface-dark": "#1E1E1E",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                    boxShadow: {
+                        'neon-blue': '0 0 10px rgba(0, 234, 255, 0.5), 0 0 20px rgba(0, 234, 255, 0.3)',
+                        'neon-pink': '0 0 10px rgba(255, 41, 117, 0.5)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom Neon Glow Text */
+        .text-glow {
+            text-shadow: 0 0 15px rgba(0, 234, 255, 0.4);
+        }
+        
+        /* Subtle geometric background pattern */
+        .bg-cyber-grid {
+            background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+
+        /* Pulsing animation for waiting text */
+        @keyframes pulse-opacity {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .animate-pulse-slow {
+            animation: pulse-opacity 2s ease-in-out infinite;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display bg-background-light dark:bg-background-dark text-white min-h-screen flex flex-col antialiased selection:bg-primary selection:text-black">
+<!-- Background Pattern Layer -->
+<div class="fixed inset-0 pointer-events-none bg-cyber-grid z-0"></div>
+<!-- Main Content Container -->
+<div class="relative z-10 flex flex-col w-full h-full min-h-screen max-w-md mx-auto">
+<!-- Header Section -->
+<header class="flex flex-col items-center pt-10 pb-6 px-4">
+<span class="text-gray-400 text-xs tracking-[0.2em] font-bold uppercase mb-2">Room Code</span>
+<div class="relative group">
+<!-- Decorative neon stroke around code -->
+<div class="absolute -inset-4 bg-primary/10 rounded-xl blur-lg group-hover:bg-primary/20 transition-all duration-500"></div>
+<h1 class="relative text-[64px] font-bold leading-none tracking-widest text-white text-glow">XY9Z</h1>
+</div>
+<div class="mt-8 w-full flex justify-center">
+<button class="group relative flex items-center justify-center gap-2 px-6 py-3 bg-surface-dark border border-primary/50 hover:border-primary text-primary rounded-full transition-all duration-300 shadow-[0_0_15px_rgba(0,234,255,0.1)] hover:shadow-[0_0_20px_rgba(0,234,255,0.4)] active:scale-95">
+<span class="material-symbols-outlined text-[20px] group-hover:rotate-12 transition-transform">ios_share</span>
+<span class="text-sm font-bold tracking-wider">SHARE CODE</span>
+</button>
+</div>
+</header>
+<!-- Player Grid Section -->
+<main class="flex-1 flex flex-col justify-center px-6 pb-24">
+<div class="grid grid-cols-2 gap-4 sm:gap-6">
+<!-- Player 1 -->
+<div class="flex flex-col items-center gap-2 group">
+<div class="relative p-1 rounded-full border-2 border-secondary shadow-neon-pink bg-surface-dark w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center overflow-hidden">
+<div class="w-full h-full rounded-full bg-cover bg-center" data-alt="Stylized neon vector of a cool cat with sunglasses" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD9oejYFrht9Ze2wiUcaTP_CI-OB7xY0vr8gbGm2OR5fsj0ycTwybyTl-h3HBAvpGWyv43E57G_16CSM167dF1qnfe7JlT4NysyNtwhmdNqHeljePGbXCxRsig16-h6sLEvMI3ftrQUj9PHLIzfNSs4RuL7maPBlVqgH3cWKKR2O_lcmMYyhOX4r0wtUGQChW9oH6LvXumOIkBph2Ki_bCbaTZUYmIF5SSoWmk7Jy1rm9deyIEDjuoogQvk77LL9m69We9aNnUWjS9g');"></div>
+</div>
+<span class="text-sm font-bold tracking-wide text-white group-hover:text-secondary transition-colors">Cool Cat</span>
+</div>
+<!-- Player 2 -->
+<div class="flex flex-col items-center gap-2 group">
+<div class="relative p-1 rounded-full border-2 border-primary shadow-neon-blue bg-surface-dark w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center overflow-hidden">
+<div class="w-full h-full rounded-full bg-cover bg-center" data-alt="Pixel art green alien face on dark background" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCxXksjlAQV3vs7nNVdId2OPTOjEcYmCTq_tqLvzhl8OmiMaOklpHMZO9bmWzTaHreRoi54P6t3foNXuSbEkDloApukxBueB9v87tbf4O-1meTgPKkIfMG-B2h0cXU8b3YomeUSh4NGnmLHBayAzNGD2_SAiGEb0AgGjKhNugVzTDx5-ZOC3YVchF4-SnevHL81TYpNat0wLtuYg87vDhPkDQrI_JMoV7eODzOMcHwCP4fltDe6RKqAHVExBBxgaHjwZm74tKr3lanz');"></div>
+</div>
+<span class="text-sm font-bold tracking-wide text-white group-hover:text-primary transition-colors">Pixel Alien</span>
+</div>
+<!-- Player 3 -->
+<div class="flex flex-col items-center gap-2 group">
+<div class="relative p-1 rounded-full border-2 border-accent bg-surface-dark w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center overflow-hidden shadow-[0_0_10px_rgba(204,255,0,0.4)]">
+<div class="w-full h-full rounded-full bg-cover bg-center" data-alt="Simple line art of a retro robot head" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAyJBqxri2V_6YjA81mChyTEEfkQ7UDCReeGji5UW__LmBVvMNZCkpR9LleCrAYfCLKdXGH3RdbVyP1QQYKOTL4M5gqBRoCrhmfGaXBdgn_2wJaqm-Ib7KSuwka9CkalL4R0LsBiSybPOj6-uMeQDHu25mnS8v4PO8HkdGZ2iDtZhO26GdfNzJ99KiMHz2wSHvDIrV3xBOXP7xkVwRoiNJuk1LR9ckdkZKJFEv_idGujlSzleKRAesT4MB8COYXQu-qKjIt5kU5J1WF');"></div>
+</div>
+<span class="text-sm font-bold tracking-wide text-white group-hover:text-accent transition-colors">Retro Robot</span>
+</div>
+<!-- Player 4 -->
+<div class="flex flex-col items-center gap-2 group">
+<div class="relative p-1 rounded-full border-2 border-secondary bg-surface-dark w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center overflow-hidden shadow-neon-pink">
+<div class="w-full h-full rounded-full bg-cover bg-center" data-alt="Minimalist neon ninja mask icon" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDYXk0NpGmLGQGoEGtgurIaB8FTSMOwppzooRIWHE2UanCiQN-0MTIr2fi5ql08OaMHy7rCcxaay6VxDgP3roufTtyN5vHy-RW5ny_MahpFxflxzx1gZtTQXLfFl3lUzccfyoRFQZrwFKu6GmaJGIR_C08WfXJhzZp2J4lss-SSaaBLFqzrcs6Arhc75lPbgc_NGTKTYZaKll7kJOI1duB-ZmShyx5EPXzgjcwFYruo5x8wY-4IcnDSaQxqBLhKg7oqZJboFz4tANbl');"></div>
+</div>
+<span class="text-sm font-bold tracking-wide text-white group-hover:text-secondary transition-colors">Neon Ninja</span>
+</div>
+<!-- Empty State 1 -->
+<div class="flex flex-col items-center gap-2 opacity-50">
+<div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-dashed border-gray-600 bg-transparent flex items-center justify-center">
+<span class="material-symbols-outlined text-gray-600 text-3xl">add</span>
+</div>
+<span class="text-sm font-medium tracking-wide text-gray-500">Waiting...</span>
+</div>
+<!-- Empty State 2 -->
+<div class="flex flex-col items-center gap-2 opacity-50">
+<div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-dashed border-gray-600 bg-transparent flex items-center justify-center">
+<span class="material-symbols-outlined text-gray-600 text-3xl">add</span>
+</div>
+<span class="text-sm font-medium tracking-wide text-gray-500">Waiting...</span>
+</div>
+</div>
+<div class="mt-10 text-center">
+<p class="text-gray-400 text-sm font-medium animate-pulse-slow tracking-widest uppercase">Waiting for Host to start...</p>
+</div>
+</main>
+<!-- Native Ad Banner (Sticky Bottom) -->
+<div class="w-full px-4 pb-4 bg-transparent mt-auto z-20">
+<div class="bg-surface-dark border border-gray-800 rounded-xl p-3 flex items-center gap-3 shadow-lg relative overflow-hidden group cursor-pointer hover:border-gray-700 transition-colors">
+<!-- Background highlight for ad -->
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
+<!-- Ad Visual -->
+<div class="flex-shrink-0 bg-[#2C2C2C] w-10 h-10 rounded-lg flex items-center justify-center text-white relative">
+<span class="material-symbols-outlined text-xl">liquor</span>
+</div>
+<!-- Ad Content -->
+<div class="flex-1 min-w-0 flex flex-col justify-center">
+<div class="flex items-center gap-2 mb-0.5">
+<span class="text-[10px] font-bold border border-gray-600 text-gray-500 px-1 rounded uppercase leading-tight">Ad</span>
+<p class="text-gray-300 text-xs font-medium truncate">Thirsty?</p>
+</div>
+<p class="text-white text-xs leading-tight">Get drinks delivered fast with <span class="font-bold">Drizly</span>.</p>
+</div>
+<!-- Ad CTA -->
+<div class="flex-shrink-0 pl-2">
+<span class="text-accent text-xs font-bold whitespace-nowrap group-hover:underline decoration-accent underline-offset-2 transition-all flex items-center gap-1">
+                        Order Now 
+                        <span class="material-symbols-outlined text-[14px] leading-none">chevron_right</span>
+</span>
+</div>
+</div>
+</div>
+</div>
+</body></html>
