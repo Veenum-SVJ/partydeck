@@ -36,6 +36,22 @@ class Player {
 
   factory Player.fromJson(Map<String, dynamic> json) => _$PlayerFromJson(json);
   Map<String, dynamic> toJson() => _$PlayerToJson(this);
+
+  Player copyWith({
+    String? id,
+    String? nickname,
+    bool? isHost,
+    int? score,
+    String? avatarUrl,
+  }) {
+    return Player(
+      id: id ?? this.id,
+      nickname: nickname ?? this.nickname,
+      isHost: isHost ?? this.isHost,
+      score: score ?? this.score,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+    );
+  }
 }
 
 @JsonSerializable()
@@ -64,6 +80,26 @@ class GameState {
   @JsonKey(name: 'player_hands')
   final Map<String, List<CardModel>>? playerHands;
 
+  /// Current round number (1-indexed)
+  @JsonKey(name: 'current_round')
+  final int currentRound;
+
+  /// Total number of rounds in the game
+  @JsonKey(name: 'total_rounds')
+  final int totalRounds;
+
+  /// Winner of the current round (Player ID)
+  @JsonKey(name: 'round_winner_id')
+  final String? roundWinnerId;
+
+  /// Timestamp when round started
+  @JsonKey(name: 'round_start_time')
+  final DateTime? roundStartTime;
+
+  /// Timer duration in seconds
+  @JsonKey(name: 'timer_duration')
+  final int timerDuration;
+
   GameState({
     required this.roomCode,
     this.phase = GamePhase.waiting,
@@ -73,6 +109,11 @@ class GameState {
     this.judgeId,
     this.submissions,
     this.playerHands,
+    this.currentRound = 1,
+    this.totalRounds = 10,
+    this.roundWinnerId,
+    this.roundStartTime,
+    this.timerDuration = 60,
   });
 
   factory GameState.fromJson(Map<String, dynamic> json) => _$GameStateFromJson(json);
@@ -87,6 +128,11 @@ class GameState {
     String? judgeId,
     Map<String, String>? submissions,
     Map<String, List<CardModel>>? playerHands,
+    int? currentRound,
+    int? totalRounds,
+    String? roundWinnerId,
+    DateTime? roundStartTime,
+    int? timerDuration,
   }) {
     return GameState(
       roomCode: roomCode ?? this.roomCode,
@@ -97,6 +143,23 @@ class GameState {
       judgeId: judgeId ?? this.judgeId,
       submissions: submissions ?? this.submissions,
       playerHands: playerHands ?? this.playerHands,
+      currentRound: currentRound ?? this.currentRound,
+      totalRounds: totalRounds ?? this.totalRounds,
+      roundWinnerId: roundWinnerId ?? this.roundWinnerId,
+      roundStartTime: roundStartTime ?? this.roundStartTime,
+      timerDuration: timerDuration ?? this.timerDuration,
     );
   }
+
+  /// Get the current round winner Player object
+  Player? get roundWinner => roundWinnerId != null 
+    ? players.cast<Player?>().firstWhere((p) => p?.id == roundWinnerId, orElse: () => null)
+    : null;
+
+  /// Check if game is complete
+  bool get isGameComplete => currentRound > totalRounds || phase == GamePhase.finished;
+
+  /// Get leaderboard sorted by score
+  List<Player> get leaderboard => List<Player>.from(players)
+    ..sort((a, b) => b.score.compareTo(a.score));
 }

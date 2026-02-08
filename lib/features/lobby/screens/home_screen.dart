@@ -512,60 +512,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _showAllDecksDialog() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: AppTheme.surfaceGrey,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (c) => Container(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'ALL DECKS',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () => Navigator.pop(c),
-                  icon: Icon(Icons.close, color: Colors.white.withValues(alpha: 0.5)),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.construction, color: AppTheme.primaryCyan, size: 64),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Deck Browser Coming Soon!',
-                      style: TextStyle(color: Colors.white, fontSize: 18),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Browse and import custom decks',
-                      style: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    context.push('/decks');
   }
 
   Widget _buildFeaturedDecks() {

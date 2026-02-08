@@ -48,6 +48,13 @@ GameState _$GameStateFromJson(Map<String, dynamic> json) => GameState(
           .toList(),
     ),
   ),
+  currentRound: (json['current_round'] as num?)?.toInt() ?? 1,
+  totalRounds: (json['total_rounds'] as num?)?.toInt() ?? 10,
+  roundWinnerId: json['round_winner_id'] as String?,
+  roundStartTime: json['round_start_time'] == null
+      ? null
+      : DateTime.parse(json['round_start_time'] as String),
+  timerDuration: (json['timer_duration'] as num?)?.toInt() ?? 60,
 );
 
 Map<String, dynamic> _$GameStateToJson(GameState instance) => <String, dynamic>{
@@ -59,6 +66,11 @@ Map<String, dynamic> _$GameStateToJson(GameState instance) => <String, dynamic>{
   'judge_id': instance.judgeId,
   'submissions': instance.submissions,
   'player_hands': instance.playerHands,
+  'current_round': instance.currentRound,
+  'total_rounds': instance.totalRounds,
+  'round_winner_id': instance.roundWinnerId,
+  'round_start_time': instance.roundStartTime?.toIso8601String(),
+  'timer_duration': instance.timerDuration,
 };
 
 const _$GamePhaseEnumMap = {

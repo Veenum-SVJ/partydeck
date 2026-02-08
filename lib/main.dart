@@ -10,6 +10,7 @@ import 'features/game/screens/round_results_screen.dart';
 import 'features/lobby/screens/home_screen.dart';
 import 'features/lobby/screens/lobby_screen.dart';
 import 'features/lobby/screens/game_setup_screen.dart';
+import 'features/deck/screens/deck_builder_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +30,11 @@ final _router = GoRouter(
     GoRoute(
       path: '/',
       builder: (context, state) => const HomeScreen(),
+    ),
+    // Deck Builder Screen
+    GoRoute(
+      path: '/decks',
+      builder: (context, state) => const DeckBuilderScreen(),
     ),
     // Game Setup Screen (Host only)
     GoRoute(
