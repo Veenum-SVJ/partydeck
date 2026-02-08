@@ -55,7 +55,19 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+        String errorMessage = 'Failed to create room';
+        if (e.toString().contains('SocketException') || e.toString().contains('host lookup')) {
+          errorMessage = 'No internet connection. Please check your network.';
+        } else if (e.toString().contains('timeout')) {
+          errorMessage = 'Connection timed out. Please try again.';
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: AppTheme.secondaryPink,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -237,39 +249,42 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
           // Profile Button with Online Status
-          Stack(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withValues(alpha: 0.05),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-                ),
-                child: Icon(Icons.person, color: Colors.white.withValues(alpha: 0.8)),
-              ),
-              // Online Status Dot
-              Positioned(
-                top: 0,
-                right: 0,
-                child: Container(
-                  width: 12,
-                  height: 12,
+          GestureDetector(
+            onTap: () => _showProfileDialog(),
+            child: Stack(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.green.shade400,
-                    border: Border.all(color: AppTheme.backgroundBlack, width: 2),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.green.shade400.withValues(alpha: 0.6),
-                        blurRadius: 8,
-                      ),
-                    ],
+                    color: Colors.white.withValues(alpha: 0.05),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                  ),
+                  child: Icon(Icons.person, color: Colors.white.withValues(alpha: 0.8)),
+                ),
+                // Online Status Dot
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: Container(
+                    width: 12,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.green.shade400,
+                      border: Border.all(color: AppTheme.backgroundBlack, width: 2),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.green.shade400.withValues(alpha: 0.6),
+                          blurRadius: 8,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -444,6 +459,115 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void _showProfileDialog() {
+    showDialog(
+      context: context,
+      builder: (c) => AlertDialog(
+        backgroundColor: AppTheme.surfaceGrey,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        title: Row(
+          children: [
+            Text(_selectedAvatar, style: const TextStyle(fontSize: 32)),
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _nicknameController.text.isEmpty ? 'Guest' : _nicknameController.text,
+                  style: const TextStyle(color: Colors.white, fontSize: 18),
+                ),
+                Text(
+                  'Online',
+                  style: TextStyle(color: Colors.green.shade400, fontSize: 12),
+                ),
+              ],
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildProfileOption(Icons.history, 'Game History', 'Coming soon'),
+            _buildProfileOption(Icons.star, 'Achievements', 'Coming soon'),
+            _buildProfileOption(Icons.settings, 'Settings', 'Coming soon'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(c),
+            child: Text('CLOSE', style: TextStyle(color: AppTheme.primaryCyan)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProfileOption(IconData icon, String title, String subtitle) {
+    return ListTile(
+      leading: Icon(icon, color: AppTheme.primaryCyan),
+      title: Text(title, style: const TextStyle(color: Colors.white)),
+      subtitle: Text(subtitle, style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 12)),
+      contentPadding: EdgeInsets.zero,
+    );
+  }
+
+  void _showAllDecksDialog() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppTheme.surfaceGrey,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (c) => Container(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'ALL DECKS',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () => Navigator.pop(c),
+                  icon: Icon(Icons.close, color: Colors.white.withValues(alpha: 0.5)),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.construction, color: AppTheme.primaryCyan, size: 64),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Deck Browser Coming Soon!',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Browse and import custom decks',
+                      style: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildFeaturedDecks() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -479,7 +603,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () => _showAllDecksDialog(),
                 child: Text(
                   'VIEW ALL',
                   style: TextStyle(
