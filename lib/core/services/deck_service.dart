@@ -20,9 +20,7 @@ class DeckService {
     }).whereType<DeckModel>().toList();
 
     return [
-      MockDecks.e3Drill,
-      MockDecks.e1Standard,
-      MockDecks.e2MostLikely,
+      ...MockDecks.getAllDecks(),
       ...customDecks,
     ];
   }

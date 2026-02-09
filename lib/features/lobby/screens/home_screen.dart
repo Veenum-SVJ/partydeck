@@ -51,7 +51,8 @@ class _HomeScreenState extends State<HomeScreen> {
       final roomCode = await _supabaseService.createRoom(host);
       
       if (mounted) {
-        context.push('/lobby/$roomCode', extra: host);
+        // Navigate to game setup screen so host can select a deck
+        context.push('/setup/$roomCode', extra: host);
       }
     } catch (e) {
       if (mounted) {
