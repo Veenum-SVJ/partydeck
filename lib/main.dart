@@ -73,7 +73,6 @@ final _router = GoRouter(
     GoRoute(
       path: '/results/:roomCode',
       builder: (context, state) {
-        final roomCode = state.pathParameters['roomCode']!;
         final extras = state.extra as Map<String, dynamic>;
         final gameState = extras['gameState'] as GameState;
         final player = extras['player'] as Player;

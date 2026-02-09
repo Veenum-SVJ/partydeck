@@ -393,7 +393,7 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
           Switch(
             value: _brandedContentEnabled,
             onChanged: (v) => setState(() => _brandedContentEnabled = v),
-            activeColor: AppTheme.secondaryPink,
+            activeThumbColor: AppTheme.secondaryPink,
             activeTrackColor: AppTheme.secondaryPink.withValues(alpha: 0.5),
           ),
         ],

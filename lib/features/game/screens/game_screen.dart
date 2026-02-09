@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/constants/app_theme.dart';
-import '../../../core/models/card_model.dart';
 import '../../../core/models/game_state.dart';
 import '../../../core/services/supabase_service.dart';
 import '../engines/e1_game_widget.dart';

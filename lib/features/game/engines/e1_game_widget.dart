@@ -388,21 +388,21 @@ class _E1GameWidgetState extends State<E1GameWidget> {
                 await HapticFeedback.mediumImpact();
                 widget.onSubmit(card.id);
               },
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                width: 130,
-                transform: Matrix4.identity()
-                  ..translate(0.0, isSelected ? -20.0 : 0.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: isSelected 
-                    ? Border.all(color: AppTheme.primaryCyan, width: 3)
-                    : null,
-                  boxShadow: isSelected
-                    ? AppTheme.neonCyanGlow
-                    : [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 5))],
-                ),
+              child: Transform.translate(
+                offset: Offset(0, isSelected ? -20.0 : 0.0),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  width: 130,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: isSelected 
+                      ? Border.all(color: AppTheme.primaryCyan, width: 3)
+                      : null,
+                    boxShadow: isSelected
+                      ? AppTheme.neonCyanGlow
+                      : [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 5))],
+                  ),
                 child: Padding(
                   padding: const EdgeInsets.all(12),
                   child: Column(

@@ -6,9 +6,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'dart:async';
 import '../../../core/constants/app_theme.dart';
 import '../../../core/models/game_state.dart';
-import '../../../core/models/card_model.dart';
 import '../../../core/services/supabase_service.dart';
-import '../../../core/services/deck_loader_service.dart';
+import '../../../core/services/deck_service.dart';
 import '../../game/engines/e1_judge_engine.dart';
 import '../../game/engines/e2_voting_engine.dart';
 import '../../game/engines/e3_task_engine.dart';
@@ -25,6 +24,7 @@ class LobbyScreen extends StatefulWidget {
 
 class _LobbyScreenState extends State<LobbyScreen> {
   late SupabaseService _supabaseService;
+  late DeckService _deckService;
   StreamSubscription? _gameStateSubscription;
   DeckModel? _selectedDeck;
   List<DeckModel> _availableDecks = [];
@@ -33,6 +33,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
   void initState() {
     super.initState();
     _supabaseService = SupabaseService(Supabase.instance.client);
+    _deckService = DeckService();
     _loadDecks();
     _subscribeToGameState();
   }
@@ -44,7 +45,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
   }
 
   Future<void> _loadDecks() async {
-    final decks = await DeckLoaderService.loadAllDecks();
+    final decks = await _deckService.getDecks();
     if (mounted) {
       setState(() {
         _availableDecks = decks;
@@ -54,7 +55,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
   }
 
   void _subscribeToGameState() {
-    _gameStateSubscription = _supabaseService.subscribeToGameState(widget.roomCode, (gameState) {
+    _gameStateSubscription = _supabaseService.subscribeToRoom(widget.roomCode).listen((gameState) {
       if (gameState.phase == GamePhase.playing && mounted) {
         context.go('/game/${widget.roomCode}', extra: {
           'player': widget.player,
@@ -118,7 +119,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
                 // Players Grid
                 Expanded(
                   child: StreamBuilder<GameState>(
-                    stream: _supabaseService.getGameStateStream(widget.roomCode),
+                    stream: _supabaseService.subscribeToRoom(widget.roomCode),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
                         return const Center(child: CircularProgressIndicator(color: AppTheme.primaryCyan));

@@ -76,7 +76,7 @@ class GameState {
   /// Map of PlayerID -> CardID (Answer) for E1.
   final Map<String, String>? submissions;
 
-  /// Map of PlayerID -> List<Card> (Hand) for E1.
+  /// Map of PlayerID -> List of Cards (Hand) for E1.
   @JsonKey(name: 'player_hands')
   final Map<String, List<CardModel>>? playerHands;
 

@@ -1,7 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/game_state.dart';
-import 'package:uuid/uuid.dart';
 
 class SupabaseService {
   final SupabaseClient _client;

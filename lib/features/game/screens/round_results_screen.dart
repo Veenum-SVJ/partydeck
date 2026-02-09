@@ -22,7 +22,7 @@ class RoundResultsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // Sort players by score
     final sortedPlayers = List<Player>.from(gameState.players)
-      ..sort((a, b) => (b.score ?? 0).compareTo(a.score ?? 0));
+      ..sort((a, b) => b.score.compareTo(a.score));
     
     final winner = sortedPlayers.isNotEmpty ? sortedPlayers.first : null;
 
@@ -202,7 +202,7 @@ class RoundResultsScreen extends StatelessWidget {
             border: Border.all(color: AppTheme.primaryCyan.withValues(alpha: 0.3)),
           ),
           child: Text(
-            '+${winner.score ?? 0} PTS',
+            '+${winner.score} PTS',
             style: TextStyle(
               color: AppTheme.primaryCyan,
               fontWeight: FontWeight.bold,
@@ -352,7 +352,7 @@ class RoundResultsScreen extends StatelessWidget {
                 ),
                 // Score
                 Text(
-                  '${player.score ?? 0} pts',
+                  '${player.score} pts',
                   style: TextStyle(
                     color: index == 0 ? AppTheme.accentYellow : AppTheme.primaryCyan,
                     fontWeight: FontWeight.bold,

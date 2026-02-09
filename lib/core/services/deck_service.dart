@@ -14,8 +14,7 @@ class DeckService {
       try {
         return DeckModel.fromJson(jsonDecode(jsonString));
       } catch (e) {
-        // Handle corrupt data gracefully?
-        print('Error parsing deck: $e');
+        // Skip corrupt deck data gracefully
         return null;
       }
     }).whereType<DeckModel>().toList();
