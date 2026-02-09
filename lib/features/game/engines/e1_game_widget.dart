@@ -403,31 +403,32 @@ class _E1GameWidgetState extends State<E1GameWidget> {
                       ? AppTheme.neonCyanGlow
                       : [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 5))],
                   ),
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        card.text,
-                        style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 12),
-                        maxLines: 5,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const Spacer(),
-                      if (isSelected)
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: AppTheme.primaryCyan,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Text(
-                            'DOUBLE TAP',
-                            style: TextStyle(color: Colors.black, fontSize: 8, fontWeight: FontWeight.bold),
-                          ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          card.text,
+                          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 12),
+                          maxLines: 5,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                    ],
+                        const Spacer(),
+                        if (isSelected)
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: AppTheme.primaryCyan,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              'DOUBLE TAP',
+                              style: TextStyle(color: Colors.black, fontSize: 8, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                 ),
               ),

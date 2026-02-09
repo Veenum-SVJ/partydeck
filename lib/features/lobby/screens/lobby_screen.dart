@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'dart:async';
 import '../../../core/constants/app_theme.dart';
 import '../../../core/models/game_state.dart';
+import '../../../core/models/card_model.dart';
 import '../../../core/services/supabase_service.dart';
 import '../../../core/services/deck_service.dart';
 import '../../game/engines/e1_judge_engine.dart';
