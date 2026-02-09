@@ -133,7 +133,7 @@ class MockDecks {
       CardModel(id: 'v8', text: 'Who would make the worst parent?', category: 'VOTE'),
       CardModel(id: 'v9', text: 'Who is most likely to go to jail?', category: 'VOTE'),
       CardModel(id: 'v10', text: 'Who talks the most trash?', category: 'VOTE'),
-      CardModel(id: 'v11', text: 'Who would sell you out for $100?', category: 'VOTE'),
+      CardModel(id: 'v11', text: 'Who would sell you out for \$100?', category: 'VOTE'),
       CardModel(id: 'v12', text: 'Who is the biggest drama queen?', category: 'VOTE'),
       CardModel(id: 'v13', text: 'Who has the worst taste in music?', category: 'VOTE'),
       CardModel(id: 'v14', text: 'Who is most likely to cry at a movie?', category: 'VOTE'),
